@@ -19,7 +19,7 @@ A step by step series of examples that tell you how to get a development environ
 
 1. Clone the repository to your local machine:
    
-    `git clone https://github.com/josephpickering9/First-Circle-Code-Test-Kotlin.git`
+    `git clone https://github.com/josephpickering9/FirstCircleTest.git`
 
 2. Open the project in IntelliJ IDEA
     - Open IntelliJ IDEA and select Open.
