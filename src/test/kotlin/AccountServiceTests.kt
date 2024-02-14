@@ -48,13 +48,11 @@ class AccountServiceTests {
 
     @Test
     fun `deposit with invalid account throws exception`() {
-        val accountId = AccountId.generate()
-        val exceptionMessage = "Account with account number $accountId does not exist."
-        every { database.getAccount(accountId) } returns failure(NotFoundException(exceptionMessage))
+        val accountId = setupInvalidAccount()
 
         val exception = accountService.deposit(accountId, BigDecimal("100")).expectFailure()
 
-        assertEquals(exceptionMessage, exception.message)
+        assertEquals("Account with account ID $accountId does not exist.", exception.message)
     }
 
     @Test
@@ -69,12 +67,11 @@ class AccountServiceTests {
 
     @Test
     fun `withdraw from invalid account throws exception`() {
-        val accountId = AccountId.generate()
-        every { database.getAccount(accountId) } returns failure(NotFoundException("Account with account number $accountId does not exist."))
+        val accountId = setupInvalidAccount()
 
         val exception = accountService.withdraw(accountId, BigDecimal("100")).expectFailure()
 
-        assertEquals("Account with account number $accountId does not exist.", exception.message)
+        assertEquals("Account with account ID $accountId does not exist.", exception.message)
     }
 
     @Test
@@ -93,32 +90,34 @@ class AccountServiceTests {
 
     @Test
     fun `transfer with invalid from account throws exception`() {
-        val fromAccountId = AccountId.generate()
-        val exceptionMessage = "Account with account ID $fromAccountId does not exist."
-        every { database.getAccount(fromAccountId) } returns failure(NotFoundException(exceptionMessage))
+        val fromAccountId = setupInvalidAccount()
         val toAccountId = setupAccount(BigDecimal("1000"))
 
         val exception = accountService.transfer(fromAccountId, toAccountId, BigDecimal("100")).expectFailure()
 
-        assertEquals(exceptionMessage, exception.message)
+        assertEquals("Account with account number $fromAccountId does not exist.", exception.message)
     }
 
     @Test
     fun `transfer with invalid to account throws exception`() {
         val fromAccountId = setupAccount(BigDecimal("1000"))
-        val toAccountId = AccountId.generate()
-        val exceptionMessage = "Account with account ID $toAccountId does not exist."
-        every { database.getAccount(toAccountId) } returns failure(NotFoundException(exceptionMessage))
+        val toAccountId = setupInvalidAccount()
 
         val exception = accountService.transfer(fromAccountId, toAccountId, BigDecimal("100")).expectFailure()
 
-        assertEquals(exceptionMessage, exception.message)
+        assertEquals("Account with account number $toAccountId does not exist.", exception.message)
     }
 
     private fun setupAccount(initialDeposit: BigDecimal): AccountId {
         val accountId = AccountId.generate()
         accountService.createAccount(accountId, initialDeposit).expectSuccess()
         every { database.getAccount(accountId) } returns success(BankAccount(accountId, initialDeposit))
+        return accountId
+    }
+
+    private fun setupInvalidAccount(): AccountId {
+        val accountId = AccountId.generate()
+        every { database.getAccount(accountId) } returns failure(NotFoundException("Account with account number $accountId does not exist."))
         return accountId
     }
 }
