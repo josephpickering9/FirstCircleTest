@@ -26,8 +26,12 @@ class AccountService(private val database: InMemoryDatabase) {
     }
 
     fun transfer(fromAccountId: AccountId, toAccountId: AccountId, amount: BigDecimal): Result<Unit> {
-        database.getAccount(fromAccountId).onSuccess { it.withdraw(amount) }.onFailure { return failure(it) }
-        database.getAccount(toAccountId).onSuccess { it.deposit(amount) }.onFailure { return failure(it) }
+        val fromAccount = database.getAccount(fromAccountId).onFailure { return failure(it) }
+        val toAccount = database.getAccount(toAccountId).onFailure { return failure(it) }
+
+        fromAccount.onSuccess { it.withdraw(amount) }.onFailure { return failure(it) }
+        toAccount.onSuccess { it.deposit(amount) }.onFailure { return failure(it) }
+
         return success(Unit)
     }
 

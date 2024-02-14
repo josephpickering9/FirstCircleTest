@@ -1,9 +1,7 @@
-import exceptions.InvalidAmountException
-import exceptions.InvalidBalanceException
 import models.AccountId
 import models.BankAccount
+import org.example.utils.ResultHelper.Companion.expectFailure
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
@@ -41,9 +39,8 @@ class BankAccountTests {
     fun `withdraw more than balance throws exception`() {
         val account = BankAccount(AccountId.generate(), BigDecimal("500"))
 
-        val exception = assertThrows(InvalidBalanceException::class.java) {
-            account.withdraw(BigDecimal("600"))
-        }
+        val exception = account.withdraw(BigDecimal("600")).expectFailure()
+
         assertEquals("Insufficient funds.", exception.message)
     }
 
@@ -51,9 +48,8 @@ class BankAccountTests {
     fun `deposit negative amount throws exception`() {
         val account = BankAccount(AccountId.generate(), BigDecimal("1000"))
 
-        val exception = assertThrows(InvalidAmountException::class.java) {
-            account.deposit(BigDecimal("-100"))
-        }
+        val exception = account.deposit(BigDecimal("-100")).expectFailure()
+
         assertEquals("Deposit amount must be positive.", exception.message)
     }
 }
