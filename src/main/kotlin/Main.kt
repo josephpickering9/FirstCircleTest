@@ -19,6 +19,6 @@ fun main() {
     accountService.withdraw(accountId1, BigDecimal("200"))
     accountService.transfer(accountId1, accountId2, BigDecimal("300"))
 
-    println("Account $accountId1 Balance: ${accountService.checkBalance(accountId1)}")
-    println("Account $accountId2 Balance: ${accountService.checkBalance(accountId2)}")
+    println("Account $accountId1 Balance: ${accountService.checkBalance(accountId1).getOrNull()}")
+    println("Account $accountId2 Balance: ${accountService.checkBalance(accountId2).getOrNull()}")
 }

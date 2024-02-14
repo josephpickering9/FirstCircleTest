@@ -95,7 +95,7 @@ class AccountServiceTests {
 
         val exception = accountService.transfer(fromAccountId, toAccountId, BigDecimal("100")).expectFailure()
 
-        assertEquals("Account with account number $fromAccountId does not exist.", exception.message)
+        assertEquals("Account with account ID $fromAccountId does not exist.", exception.message)
     }
 
     @Test
@@ -105,7 +105,7 @@ class AccountServiceTests {
 
         val exception = accountService.transfer(fromAccountId, toAccountId, BigDecimal("100")).expectFailure()
 
-        assertEquals("Account with account number $toAccountId does not exist.", exception.message)
+        assertEquals("Account with account ID $toAccountId does not exist.", exception.message)
     }
 
     private fun setupAccount(initialDeposit: BigDecimal): AccountId {
@@ -117,7 +117,7 @@ class AccountServiceTests {
 
     private fun setupInvalidAccount(): AccountId {
         val accountId = AccountId()
-        every { database.getAccount(accountId) } returns failure(NotFoundException("Account with account number $accountId does not exist."))
+        every { database.getAccount(accountId) } returns failure(NotFoundException("Account with account ID $accountId does not exist."))
         return accountId
     }
 }
