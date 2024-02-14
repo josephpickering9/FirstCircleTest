@@ -4,6 +4,7 @@ import enums.TransactionType
 import exceptions.InvalidAmountException
 import exceptions.InvalidBalanceException
 import org.example.models.Transaction
+import org.example.utils.ResultHelper.Companion.success
 import java.math.BigDecimal
 import java.util.UUID
 
@@ -20,7 +21,7 @@ class BankAccount(val accountId: AccountId, initialDeposit: BigDecimal) {
         if (amount <= BigDecimal.ZERO) throw InvalidAmountException("Deposit amount must be positive.")
 
         transactions.add(Transaction(TransactionType.DEPOSIT, amount))
-        return Result.success(Unit)
+        return success(Unit)
     }
 
     fun withdraw(amount: BigDecimal): Result<Unit> {
@@ -28,7 +29,7 @@ class BankAccount(val accountId: AccountId, initialDeposit: BigDecimal) {
         if (this.getBalance() < amount) throw InvalidBalanceException("Insufficient funds.")
 
         transactions.add(Transaction(TransactionType.WITHDRAWAL, amount))
-        return Result.success(Unit)
+        return success(Unit)
     }
 
     fun getBalance(): BigDecimal = transactions.sumOf { it.effectiveAmount }
