@@ -18,12 +18,6 @@ class InMemoryDatabase {
         return success(Unit)
     }
 
-    fun getAccount(accountId: AccountId): Result<BankAccount> {
-        if (!accounts.containsKey(accountId))
-            return failure(NotFoundException("Account with account ID $accountId does not exist."))
-
-        return success(accounts.getValue(accountId))
-    }
-
-    fun getAccounts(): Result<List<BankAccount>> = success(accounts.values.toList())
+    fun getAccount(accountId: AccountId): Result<BankAccount> =
+        accounts[accountId]?.let { success(it) } ?: failure(NotFoundException("Account with account ID $accountId does not exist."))
 }

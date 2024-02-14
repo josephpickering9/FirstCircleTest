@@ -7,6 +7,6 @@ class Transaction(type: TransactionType, amount: BigDecimal) {
     val effectiveAmount: BigDecimal =
         when (type) {
             TransactionType.DEPOSIT -> amount
-            TransactionType.WITHDRAWAL -> amount.negate()
+            TransactionType.WITHDRAWAL -> amount.abs().negate()
         }
 }

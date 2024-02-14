@@ -22,7 +22,7 @@ class InMemoryDatabaseTests {
 
     @Test
     fun `addAccount stores account correctly`() {
-        val accountId = AccountId.generate()
+        val accountId = AccountId()
         val account = BankAccount(accountId, BigDecimal("1000"))
 
         database.addAccount(account).expectSuccess()
@@ -35,10 +35,10 @@ class InMemoryDatabaseTests {
 
     @Test
     fun `addAccount with existing account throws exception`() {
-        val accountId = AccountId.generate()
+        val accountId = AccountId()
         val account = BankAccount(accountId, BigDecimal("1000"))
-
         database.addAccount(account).expectSuccess()
+
         val exception = database.addAccount(account).expectFailure()
 
         assertEquals("Account with account ID $accountId already exists.", exception.message)
@@ -46,7 +46,7 @@ class InMemoryDatabaseTests {
 
     @Test
     fun `getAccount with invalid accountNumber throws exception`() {
-        val invalidAccountNumber = AccountId.generate()
+        val invalidAccountNumber = AccountId()
 
         val exception = database.getAccount(invalidAccountNumber).expectFailure()
 

@@ -9,8 +9,8 @@ fun main() {
     val database = InMemoryDatabase()
     val accountService = AccountService(database)
 
-    val accountId1 = AccountId.generate()
-    val accountId2 = AccountId.generate()
+    val accountId1 = AccountId()
+    val accountId2 = AccountId()
 
     accountService.createAccount(accountId1, BigDecimal("1000"))
     accountService.createAccount(accountId2, BigDecimal("500"))

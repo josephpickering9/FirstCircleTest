@@ -9,7 +9,7 @@ class BankAccountTests {
 
     @Test
     fun `BankAccount creation with initial deposit`() {
-        val accountId = AccountId.generate()
+        val accountId = AccountId()
         val account = BankAccount(accountId, BigDecimal("1000"))
 
         assertEquals(accountId, account.accountId)
@@ -18,7 +18,7 @@ class BankAccountTests {
 
     @Test
     fun `deposit positive amount increases balance`() {
-        val account = BankAccount(AccountId.generate(), BigDecimal("500"))
+        val account = BankAccount(AccountId(), BigDecimal("500"))
 
         account.deposit(BigDecimal("500"))
 
@@ -27,7 +27,7 @@ class BankAccountTests {
 
     @Test
     fun `withdraw positive amount decreases balance`() {
-        val account = BankAccount(AccountId.generate(), BigDecimal("1000"))
+        val account = BankAccount(AccountId(), BigDecimal("1000"))
 
         account.deposit(BigDecimal("2000"))
         account.withdraw(BigDecimal("1000"))
@@ -37,7 +37,7 @@ class BankAccountTests {
 
     @Test
     fun `withdraw more than balance throws exception`() {
-        val account = BankAccount(AccountId.generate(), BigDecimal("500"))
+        val account = BankAccount(AccountId(), BigDecimal("500"))
 
         val exception = account.withdraw(BigDecimal("600")).expectFailure()
 
@@ -46,7 +46,7 @@ class BankAccountTests {
 
     @Test
     fun `deposit negative amount throws exception`() {
-        val account = BankAccount(AccountId.generate(), BigDecimal("1000"))
+        val account = BankAccount(AccountId(), BigDecimal("1000"))
 
         val exception = account.deposit(BigDecimal("-100")).expectFailure()
 

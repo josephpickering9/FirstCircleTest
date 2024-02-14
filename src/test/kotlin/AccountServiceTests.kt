@@ -109,14 +109,14 @@ class AccountServiceTests {
     }
 
     private fun setupAccount(initialDeposit: BigDecimal): AccountId {
-        val accountId = AccountId.generate()
+        val accountId = AccountId()
         accountService.createAccount(accountId, initialDeposit).expectSuccess()
         every { database.getAccount(accountId) } returns success(BankAccount(accountId, initialDeposit))
         return accountId
     }
 
     private fun setupInvalidAccount(): AccountId {
-        val accountId = AccountId.generate()
+        val accountId = AccountId()
         every { database.getAccount(accountId) } returns failure(NotFoundException("Account with account number $accountId does not exist."))
         return accountId
     }

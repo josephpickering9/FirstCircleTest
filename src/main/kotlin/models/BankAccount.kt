@@ -13,9 +13,7 @@ class BankAccount(val accountId: AccountId, initialDeposit: BigDecimal) {
     private val transactions: MutableList<Transaction> = mutableListOf()
 
     init {
-        if (initialDeposit > BigDecimal.ZERO) {
-            transactions.add(Transaction(TransactionType.DEPOSIT, initialDeposit))
-        }
+        deposit(initialDeposit).onFailure { throw it }
     }
 
     fun deposit(amount: BigDecimal): Result<Unit> {
@@ -36,8 +34,5 @@ class BankAccount(val accountId: AccountId, initialDeposit: BigDecimal) {
     fun getBalance(): BigDecimal = transactions.sumOf { it.effectiveAmount }
 }
 
-data class AccountId(val value: UUID) {
-    companion object {
-        fun generate(): AccountId = AccountId(UUID.randomUUID())
-    }
-}
+@JvmInline
+value class AccountId(val value: UUID = UUID.randomUUID())
