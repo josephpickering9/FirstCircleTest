@@ -5,7 +5,7 @@ import models.AccountId
 import models.BankAccount
 import java.math.BigDecimal
 
-class BankAccountService(private val database: InMemoryDatabase) {
+class AccountService(private val database: InMemoryDatabase) {
 
     fun createAccount(accountId: AccountId, initialDeposit: BigDecimal) {
         val account = BankAccount(accountId, initialDeposit)

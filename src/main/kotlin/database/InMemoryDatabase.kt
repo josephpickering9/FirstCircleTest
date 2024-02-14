@@ -22,4 +22,8 @@ class InMemoryDatabase {
 
         return Result.success(accounts.getValue(accountId))
     }
+
+    fun getAccounts(): Result<List<BankAccount>> {
+        return Result.success(accounts.values.toList())
+    }
 }

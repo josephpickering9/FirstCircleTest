@@ -9,13 +9,7 @@ import java.util.UUID
 
 class BankAccount(val accountId: AccountId, initialDeposit: BigDecimal) {
     private val transactions: MutableList<Transaction> = mutableListOf()
-    val balance: BigDecimal =
-        transactions.sumOf { transaction ->
-            when (transaction.type) {
-                TransactionType.DEPOSIT -> transaction.amount
-                TransactionType.WITHDRAWAL -> transaction.amount.negate()
-            }
-        }
+    val balance: BigDecimal = transactions.sumOf { transaction -> transaction.effectiveAmount }
 
     init {
         if (initialDeposit > BigDecimal.ZERO) {

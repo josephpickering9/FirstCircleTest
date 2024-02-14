@@ -1,3 +1,9 @@
 package org.example.services
 
-class BankService {}
+import database.InMemoryDatabase
+
+class BankService(private val database: InMemoryDatabase) {
+    fun getAccounts() {
+        database.getAccounts()
+    }
+}
