@@ -9,7 +9,6 @@ import java.util.UUID
 
 class BankAccount(val accountId: AccountId, initialDeposit: BigDecimal) {
     private val transactions: MutableList<Transaction> = mutableListOf()
-    val balance: BigDecimal = transactions.sumOf { transaction -> transaction.effectiveAmount }
 
     init {
         if (initialDeposit > BigDecimal.ZERO) {
@@ -26,11 +25,13 @@ class BankAccount(val accountId: AccountId, initialDeposit: BigDecimal) {
 
     fun withdraw(amount: BigDecimal): Result<Unit> {
         if (amount <= BigDecimal.ZERO) throw InvalidAmountException("Withdrawal amount must be positive.")
-        if (this.balance < amount) throw InvalidBalanceException("Insufficient funds.")
+        if (this.getBalance() < amount) throw InvalidBalanceException("Insufficient funds.")
 
         transactions.add(Transaction(TransactionType.WITHDRAWAL, amount))
         return Result.success(Unit)
     }
+
+    fun getBalance(): BigDecimal = transactions.sumOf { it.effectiveAmount }
 }
 
 data class AccountId(val value: UUID) {

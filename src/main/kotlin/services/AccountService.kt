@@ -24,5 +24,5 @@ class AccountService(private val database: InMemoryDatabase) {
     }
 
     fun checkBalance(accountId: AccountId): Result<BigDecimal> =
-        database.getAccount(accountId).map { it.balance }
+        database.getAccount(accountId).map { it.getBalance() }
 }
