@@ -14,7 +14,7 @@ class AccountService(private val database: InMemoryDatabase) {
         val account = BankAccount()
         database.addAccount(account).onFailure { return failure(it) }
 
-        if (initialDeposit != null) account.deposit(initialDeposit).onFailure { return failure(it) }
+        if (initialDeposit != null) account.deposit(initialDeposit)
 
         return success(account)
     }
