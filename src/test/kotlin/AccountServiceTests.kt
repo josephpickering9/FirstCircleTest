@@ -36,6 +36,17 @@ class AccountServiceTests {
     }
 
     @Test
+    fun `createAccount fails if initial deposit fails`() {
+        val initialDeposit = BigDecimal("1000")
+        val mockAccount = setupMockAccount(initialDeposit)
+        every { mockAccount.deposit(initialDeposit) } returns failure(NotFoundException("Error creating deposit."))
+
+        val exception = accountService.createAccount(initialDeposit).expectFailure()
+
+        assertEquals("Error creating deposit.", exception.message)
+    }
+
+    @Test
     fun `deposit increases account balance`() {
         val account = setupAccount(BigDecimal("1000"))
         val accountId = account.accountId
@@ -162,8 +173,8 @@ class AccountServiceTests {
     private fun setupMockAccount(initialDeposit: BigDecimal? = null): BankAccount {
         val accountId = AccountId()
         val mockAccount = mockk<BankAccount>()
+        every { database.addAccount(any()) } returns success(mockAccount)
         every { mockAccount.accountId } returns accountId
-        every { database.addAccount(match { it.accountId == accountId }) } returns success(mockAccount)
         every { database.getAccount(accountId) } returns success(mockAccount)
         every { mockAccount.deposit(any()) } returns success(Unit)
         every { mockAccount.withdraw(any()) } returns success(Unit)

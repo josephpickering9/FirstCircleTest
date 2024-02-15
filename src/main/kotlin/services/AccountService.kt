@@ -11,10 +11,9 @@ import java.math.BigDecimal
 class AccountService(private val database: InMemoryDatabase) {
 
     fun createAccount(initialDeposit: BigDecimal? = null): Result<BankAccount> {
-        val account = BankAccount()
-        database.addAccount(account).onFailure { return failure(it) }
+        val account = database.addAccount(BankAccount()).getOrElse { return failure(it) }
 
-        if (initialDeposit != null) account.deposit(initialDeposit)
+        if (initialDeposit != null) account.deposit(initialDeposit).onFailure { return failure(it) }
 
         return success(account)
     }
