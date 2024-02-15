@@ -2,8 +2,8 @@ import models.BankAccount
 import database.InMemoryDatabase
 import exceptions.NotFoundException
 import models.AccountId
-import org.example.utils.ResultHelper.Companion.expectFailure
-import org.example.utils.ResultHelper.Companion.expectSuccess
+import utils.ResultHelper.Companion.expectFailure
+import utils.ResultHelper.Companion.expectSuccess
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -21,31 +21,19 @@ class InMemoryDatabaseTests {
     }
 
     @Test
-    fun `addAccount stores account correctly`() {
-        val accountId = AccountId()
-        val account = BankAccount(accountId, BigDecimal("1000"))
+    fun `addAccount stores account correctly and reflects initial deposit`() {
+        val account = BankAccount()
+        val depositAmount = BigDecimal("1000")
 
         database.addAccount(account).expectSuccess()
+        account.deposit(depositAmount).expectSuccess()
 
-        val retrievedAccount = database.getAccount(accountId).expectSuccess()
-        assertNotNull(retrievedAccount)
-        assertEquals(accountId, retrievedAccount.accountId)
-        assertEquals(BigDecimal("1000"), retrievedAccount.getBalance())
+        val retrievedAccount = database.getAccount(account.accountId).expectSuccess()
+        assertEquals(depositAmount, retrievedAccount.getBalance(), "Retrieved account balance should reflect the deposit.")
     }
 
     @Test
-    fun `addAccount with existing account throws exception`() {
-        val accountId = AccountId()
-        val account = BankAccount(accountId, BigDecimal("1000"))
-        database.addAccount(account).expectSuccess()
-
-        val exception = database.addAccount(account).expectFailure()
-
-        assertEquals("Account with account ID $accountId already exists.", exception.message)
-    }
-
-    @Test
-    fun `getAccount with invalid accountNumber throws exception`() {
+    fun `getAccount with invalid accountId fails`() {
         val invalidAccountNumber = AccountId()
 
         val exception = database.getAccount(invalidAccountNumber).expectFailure()

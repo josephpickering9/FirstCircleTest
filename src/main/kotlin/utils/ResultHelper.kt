@@ -1,4 +1,4 @@
-package org.example.utils
+package utils
 
 class ResultHelper {
     companion object {

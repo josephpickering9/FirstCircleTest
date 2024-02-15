@@ -1,21 +1,19 @@
 package database
 
-import exceptions.AlreadyExistsException
 import exceptions.NotFoundException
 import models.AccountId
 import models.BankAccount
-import org.example.utils.ResultHelper.Companion.failure
-import org.example.utils.ResultHelper.Companion.success
+import utils.ResultHelper.Companion.failure
+import utils.ResultHelper.Companion.success
 
 class InMemoryDatabase {
     private val accounts: MutableMap<AccountId, BankAccount> = mutableMapOf()
 
-    fun addAccount(account: BankAccount): Result<Unit> {
-        if (accounts.containsKey(account.accountId))
-            return failure(AlreadyExistsException("Account with account ID ${account.accountId} already exists."))
-
-        accounts[account.accountId] = account
-        return success(Unit)
+    fun addAccount(account: BankAccount): Result<BankAccount> {
+        val accountId = AccountId()
+        account.accountId = accountId
+        accounts[accountId] = account
+        return success(account)
     }
 
     fun getAccount(accountId: AccountId): Result<BankAccount> =

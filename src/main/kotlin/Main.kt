@@ -1,19 +1,17 @@
-package org.example
-
 import database.InMemoryDatabase
 import models.AccountId
 import services.AccountService
+import utils.ResultHelper.Companion.expectSuccess
 import java.math.BigDecimal
 
 fun main() {
     val database = InMemoryDatabase()
     val accountService = AccountService(database)
 
-    val accountId1 = AccountId()
-    val accountId2 = AccountId()
-
-    accountService.createAccount(accountId1, BigDecimal("1000"))
-    accountService.createAccount(accountId2, BigDecimal("500"))
+    val account1 = accountService.createAccount(BigDecimal("1000")).expectSuccess()
+    val account2 = accountService.createAccount(BigDecimal("500")).expectSuccess()
+    val accountId1 = account1.accountId
+    val accountId2 = account2.accountId
 
     accountService.deposit(accountId1, BigDecimal("500"))
     accountService.withdraw(accountId1, BigDecimal("200"))

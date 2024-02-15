@@ -1,4 +1,4 @@
-package org.example.models
+package models
 
 import enums.TransactionType
 import java.math.BigDecimal

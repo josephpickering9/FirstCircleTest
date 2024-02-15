@@ -3,15 +3,19 @@ package services
 import database.InMemoryDatabase
 import models.AccountId
 import models.BankAccount
-import org.example.utils.ResultHelper.Companion.failure
-import org.example.utils.ResultHelper.Companion.success
+import exceptions.SameAccountException
+import utils.ResultHelper.Companion.failure
+import utils.ResultHelper.Companion.success
 import java.math.BigDecimal
 
 class AccountService(private val database: InMemoryDatabase) {
 
-    fun createAccount(accountId: AccountId, initialDeposit: BigDecimal): Result<BankAccount> {
-        val account = BankAccount(accountId, initialDeposit)
+    fun createAccount(initialDeposit: BigDecimal? = null): Result<BankAccount> {
+        val account = BankAccount()
         database.addAccount(account).onFailure { return failure(it) }
+
+        if (initialDeposit != null) account.deposit(initialDeposit).onFailure { return failure(it) }
+
         return success(account)
     }
 
@@ -26,11 +30,13 @@ class AccountService(private val database: InMemoryDatabase) {
     }
 
     fun transfer(fromAccountId: AccountId, toAccountId: AccountId, amount: BigDecimal): Result<Unit> {
+        if (fromAccountId == toAccountId) return failure(SameAccountException("Cannot transfer to the same account."))
+
         val fromAccount = database.getAccount(fromAccountId).getOrElse { return failure(it) }
         val toAccount = database.getAccount(toAccountId).getOrElse { return failure(it) }
 
         fromAccount.withdraw(amount).onFailure { return failure(it) }
-        toAccount.deposit(amount).onFailure { return failure(it) }
+        toAccount.deposit(amount).onFailure { fromAccount.deposit(amount); return failure(it) }
 
         return success(Unit)
     }
