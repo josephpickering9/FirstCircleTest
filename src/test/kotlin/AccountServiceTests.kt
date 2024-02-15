@@ -156,7 +156,7 @@ class AccountServiceTests {
 
     private fun setupAccount(initialDeposit: BigDecimal): BankAccount {
         val accountId = AccountId()
-        every { database.addAccount(any()) } returns success(BankAccount())
+        every { database.addAccount() } returns success(BankAccount())
 
         val createdAccount = accountService.createAccount(initialDeposit).expectSuccess()
         createdAccount.accountId = accountId
@@ -173,7 +173,7 @@ class AccountServiceTests {
     private fun setupMockAccount(initialDeposit: BigDecimal? = null): BankAccount {
         val accountId = AccountId()
         val mockAccount = mockk<BankAccount>()
-        every { database.addAccount(any()) } returns success(mockAccount)
+        every { database.addAccount() } returns success(mockAccount)
         every { mockAccount.accountId } returns accountId
         every { database.getAccount(accountId) } returns success(mockAccount)
         every { mockAccount.deposit(any()) } returns success(Unit)

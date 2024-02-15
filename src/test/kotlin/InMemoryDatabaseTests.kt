@@ -22,14 +22,13 @@ class InMemoryDatabaseTests {
 
     @Test
     fun `addAccount stores account correctly and reflects initial deposit`() {
-        val account = BankAccount()
         val depositAmount = BigDecimal("1000")
 
-        database.addAccount(account).expectSuccess()
+        val account = database.addAccount().expectSuccess()
         account.deposit(depositAmount).expectSuccess()
 
         val retrievedAccount = database.getAccount(account.accountId).expectSuccess()
-        assertEquals(depositAmount, retrievedAccount.getBalance(), "Retrieved account balance should reflect the deposit.")
+        assertEquals(depositAmount, retrievedAccount.getBalance())
     }
 
     @Test

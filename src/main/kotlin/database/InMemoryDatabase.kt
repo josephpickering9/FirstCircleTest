@@ -9,8 +9,9 @@ import utils.ResultHelper.Companion.success
 class InMemoryDatabase {
     private val accounts: MutableMap<AccountId, BankAccount> = mutableMapOf()
 
-    fun addAccount(account: BankAccount): Result<BankAccount> {
+    fun addAccount(): Result<BankAccount> {
         val accountId = AccountId()
+        val account = BankAccount()
         account.accountId = accountId
         accounts[accountId] = account
         return success(account)
