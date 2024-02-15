@@ -28,7 +28,7 @@ class BankAccount {
         return success(Unit)
     }
 
-    fun getBalance(): BigDecimal = if (transactions.any()) transactions.sumOf { it.effectiveAmount } else ZERO
+    fun getBalance(): BigDecimal = transactions.sumOf { it.effectiveAmount }
 
     private fun addTransaction(type: TransactionType, amount: BigDecimal) =
         transactions.add(Transaction(type, amount))
